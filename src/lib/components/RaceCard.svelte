@@ -46,7 +46,7 @@
 	// Colour the card only once the race is final and has a single winner,
 	// so undecided or still-finalising races stay neutral.
 	const cardTone = $derived(
-		standing.isComplete && standing.leader && !standing.isTied
+		!question && standing.isComplete && standing.leader && !standing.isTied
 			? resultTone(standing.leader.option.party)
 			: null
 	);
@@ -233,7 +233,7 @@
 		border-color: var(--dem);
 		background: var(--dem-wash);
 	}
-	.card[data-tone='ind'] {
+	.card[data-tone='orange'] {
 		border-color: var(--win-ind);
 		background: var(--win-ind-wash);
 	}

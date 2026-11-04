@@ -88,9 +88,12 @@ export function partyTone(party: Party | null): 'rep' | 'dem' | 'lib' | 'grn' | 
  * other contests leave the card uncoloured. Returns `null` when there is no
  * meaningful party to colour (no leader, a tie, or an unsupported party).
  */
-export function resultTone(party: Party | null): 'rep' | 'dem' | 'ind' | null {
+export function resultTone(party: Party | null): 'rep' | 'dem' | 'orange' {
 	const tone = partyTone(party);
-	return tone === 'rep' || tone === 'dem' || tone === 'ind' ? tone : null;
+	if (tone === 'rep') return 'rep';
+	if (tone === 'dem') return 'dem';
+	// Everything else — independent, third party, or non-partisan — is orange.
+	return 'orange';
 }
 
 /** Turn a state feed contest name into something short enough for a phone. */

@@ -60,7 +60,7 @@
 
 	// Colour the hero once the race is final with a single winner.
 	const heroTone = $derived(
-		standing.isComplete && leading && !standing.isTied ? resultTone(leading.option.party) : null
+		!question && standing.isComplete && leading && !standing.isTied ? resultTone(leading.option.party) : null
 	);
 </script>
 
@@ -197,7 +197,7 @@
 		border-color: var(--dem);
 		background: var(--dem-wash);
 	}
-	.hero[data-tone='ind'] {
+	.hero[data-tone='orange'] {
 		border-color: var(--win-ind);
 		background: var(--win-ind-wash);
 	}
