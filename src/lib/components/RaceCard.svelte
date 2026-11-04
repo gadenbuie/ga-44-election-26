@@ -2,7 +2,13 @@
 	import CandidateRow from './CandidateRow.svelte';
 	import ReportingMeter from './ReportingMeter.svelte';
 	import { rankContest, methodTotals, isUncontested, isBallotQuestion } from '#lib/data/rank';
-	import { formatMargin, formatNumber, formatPercent, formatPercentPrecise } from '#lib/data/format';
+	import {
+		formatMargin,
+		formatNumber,
+		formatPercent,
+		formatPercentPrecise,
+		resultTone
+	} from '#lib/data/format';
 	import type { BallotItem } from '#lib/data/types';
 	import ScopeToggle from './ScopeToggle.svelte';
 	import {
@@ -37,6 +43,14 @@
 	const uncontested = $derived(isUncontested(contest));
 	const question = $derived(isBallotQuestion(contest));
 
+	// Colour the card only once the race is final and has a single winner,
+	// so undecided or still-finalising races stay neutral.
+	const cardTone = $derived(
+		standing.isComplete && standing.leader && !standing.isTied
+			? resultTone(standing.leader.option.party)
+			: null
+	);
+
 	// Only show the leader-vs-runner-up headline once votes actually exist.
 	const showMargin = $derived(
 		!question && !uncontested && standing.totalVotes > 0 && standing.leader && standing.runnerUp
@@ -49,7 +63,7 @@
 	const detailsId = $derived(`details-${entry.key}`);
 </script>
 
-<article class="card" class:featured class:missing={entry.missing}>
+<article class="card" data-tone={cardTone} class:featured class:missing={entry.missing}>
 	<header>
 		<div class="heading">
 			<h3 class="label">{entry.label}</h3>
@@ -207,6 +221,21 @@
 	.card.missing {
 		border-style: dashed;
 		box-shadow: none;
+	}
+
+	/* A finalised card gets a thin party-coloured border all the way around, plus
+       a faint wash — quieter than an edge bar. */
+	.card[data-tone='rep'] {
+		border-color: var(--rep);
+		background: var(--rep-wash);
+	}
+	.card[data-tone='dem'] {
+		border-color: var(--dem);
+		background: var(--dem-wash);
+	}
+	.card[data-tone='ind'] {
+		border-color: var(--win-ind);
+		background: var(--win-ind-wash);
 	}
 
 	.heading {

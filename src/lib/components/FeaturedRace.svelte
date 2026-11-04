@@ -9,7 +9,8 @@
 		formatNumber,
 		formatPercent,
 		formatPercentPrecise,
-		partyTone
+		partyTone,
+		resultTone
 	} from '#lib/data/format';
 	import type { BallotItemDetail } from '#lib/data/types';
 	import type { ResolvedBallotEntry } from '#lib/data/ballot';
@@ -56,9 +57,14 @@
 
 	const marginLabel = $derived(standing.isTied ? 'Tied' : formatMargin(standing.margin));
 	const leading = $derived(standing.leader);
+
+	// Colour the hero once the race is final with a single winner.
+	const heroTone = $derived(
+		standing.isComplete && leading && !standing.isTied ? resultTone(leading.option.party) : null
+	);
 </script>
 
-<section class="hero" aria-labelledby="featured-heading">
+<section class="hero" data-tone={heroTone} aria-labelledby="featured-heading">
 	<div class="eyebrow">
 		<span class="dot" aria-hidden="true"></span>
 		<span>Your district · {entry.label}</span>
@@ -179,6 +185,21 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-3);
+	}
+
+	/* A finalised hero gets a thin party-coloured border all the way around, plus
+       a faint wash. */
+	.hero[data-tone='rep'] {
+		border-color: var(--rep);
+		background: var(--rep-wash);
+	}
+	.hero[data-tone='dem'] {
+		border-color: var(--dem);
+		background: var(--dem-wash);
+	}
+	.hero[data-tone='ind'] {
+		border-color: var(--win-ind);
+		background: var(--win-ind-wash);
 	}
 
 	.eyebrow {

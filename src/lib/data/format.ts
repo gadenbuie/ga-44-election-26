@@ -82,6 +82,17 @@ export function partyTone(party: Party | null): 'rep' | 'dem' | 'lib' | 'grn' | 
 	return 'neutral';
 }
 
+/**
+ * Tone to paint a completed race card by the winner's party. Only the three
+ * parties that read as final winners are included, so Libertarians / Greens /
+ * other contests leave the card uncoloured. Returns `null` when there is no
+ * meaningful party to colour (no leader, a tie, or an unsupported party).
+ */
+export function resultTone(party: Party | null): 'rep' | 'dem' | 'ind' | null {
+	const tone = partyTone(party);
+	return tone === 'rep' || tone === 'dem' || tone === 'ind' ? tone : null;
+}
+
 /** Turn a state feed contest name into something short enough for a phone. */
 export function shortContestName(name: string): string {
 	return name
